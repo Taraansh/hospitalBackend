@@ -11,6 +11,4 @@ urlpatterns = [
     path('appointments/doctor/', views.doctor_appointments, name='doctor_appointments'),
     path('appointments/update/', views.update_appointment, name='update_appointment'),
     path('availability/', views.doctor_availability, name='doctor_availability'),
-    path('availability/list/', views.doctor_availability_list, name='doctor_availability_list'),
-    path('availability/<int:pk>/', views.doctor_availability_retrieve_update_destroy, name='doctor_availability_retrieve_update_destroy'),
 ]
