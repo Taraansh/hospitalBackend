@@ -7,7 +7,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         # fields = "__all__"
-        fields = ('appointment_id', 'patient_name', 'doctor', 'date', 'timing', 'status', 'reason', 'total_price')
+        fields = ('appointment_id', 'patient_name', 'doctor', 'date', 'timing', 'reason', 'total_price')
 
     def get_patient_name(self, obj):
         return f"{obj.patient.patient_first_name} {obj.patient.patient_last_name}"
