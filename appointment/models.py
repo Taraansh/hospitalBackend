@@ -1,13 +1,6 @@
 import datetime
 from django.db import models
 from patients.models import Patient
-from otherusers.models import Doctor
-
-STATUS_CHOICES = [
-        ('Requested', 'Requested'),
-        ('Confirmed', 'Confirmed'),
-        ('Cancelled', 'Cancelled'),
-    ]
 
 TIMING_CHOICES = [
     ('Morning', 'Morning'),
@@ -19,7 +12,6 @@ class Appointment(models.Model):
     doctor = models.CharField(max_length=50, default='')
     date = models.DateField(auto_now_add=True)
     timing = models.CharField(max_length=20, choices=TIMING_CHOICES, default='morning')
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='requested')
     reason = models.TextField(blank=True, null=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
