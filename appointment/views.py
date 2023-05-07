@@ -4,6 +4,7 @@ from rest_framework import status
 from appointment.models import Appointment
 from appointment.serializers import AppointmentSerializer
 from patients.models import Patient
+from otherusers.models import Doctor
 
 
 @api_view(['GET'])
@@ -20,11 +21,10 @@ def book_appointment(request, patient_email):
 
     doctor = request.data['doctor']
     timing = request.data['timing']
-    status = request.data['status']
     reason = request.data['reason']
     total_price = request.data['total_price']
 
-    appointment = Appointment.objects.create(patient_id=patient_id, doctor=doctor, timing=timing, status=status, reason=reason, total_price=total_price)
+    appointment = Appointment.objects.create(patient_id=patient_id, doctor=doctor, timing=timing, reason=reason, total_price=total_price)
     appointment.save()
     serializer = AppointmentSerializer(appointment, many=False)
     return Response({"status": "success"})
@@ -53,8 +53,8 @@ def appointment_detail(request, pk):
 
 
 @api_view(['GET'])
-def upcoming_appointments(request):
-    appointments = Appointment.objects.filter(patient=request.user)
+def upcoming_appointments(request, doctor):
+    appointments = Appointment.objects.filter(doctor=doctor)
     serializer = AppointmentSerializer(appointments, many=True)
     return Response(serializer.data)
 
@@ -76,15 +76,6 @@ def update_appointment(request):
     return Response(serializer.data)
 
 
-@api_view(['GET', 'POST'])
-def doctor_availability(request):
-    if request.method == 'GET':
-        doctor_id = request.user.id
-        # logic to retrieve doctor's availability
-        return Response({'message': 'Availability retrieved successfully'})
-    elif request.method == 'POST':
-        doctor_id = request.user.id
-        # logic to update doctor's availability
-        return Response({'message': 'Availability updated successfully'})
+
 
 

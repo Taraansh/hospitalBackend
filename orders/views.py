@@ -53,7 +53,7 @@ def delete_order(request, order_id):
 def modify_order_status(request, order_id):
     order = Order.objects.get(order_id=order_id)
     new_status = request.data.get('status')
-    if new_status not in ['PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED']:
+    if new_status not in ['PENDING', 'IN_PROCESS', 'SHIPPED', 'DELIVERED', 'CANCELLED']:
         return Response({'error': 'Invalid order status.'})
 
     order.status = new_status
@@ -67,4 +67,10 @@ def view_order_by_patient(request, patient_email):
     patient = Patient.objects.get(patient_email=patient_email)
     order = Order.objects.filter(patient=patient)
     serializer = OrderSerializer(order, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def all_orders(request):
+    orders = Order.objects.all()
+    serializer = OrderSerializer(orders, many=True)
     return Response(serializer.data)

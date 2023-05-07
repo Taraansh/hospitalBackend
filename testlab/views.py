@@ -30,18 +30,14 @@ def view_tests_booked_by_patient(request, patient_email):
     # serializer = PathLabTestBookingSerializer(bookings, many=True)
     # return Response(serializer.data)
 
-@api_view(['POST'])
-def upload_test_results(request, booking_id):
-    try:
-        booking = PathLabTestBooking.objects.get(id=booking_id)
-    except PathLabTestBooking.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    
-    serializer = PathLabTestBookingSerializer(booking, data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['PUT'])
+def upload_test_results(request, test_id):
+    booking = PathLabTestBooking.objects.get(test_id=test_id)
+    booking.test_result_url = request.data.get('test_result_url', booking.test_result_url)
+    booking.save()
+    serializer = PathLabTestBookingSerializer(booking, many = False)
+    return Response(serializer.data)
+
 
 
 @api_view(['POST'])

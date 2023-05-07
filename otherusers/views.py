@@ -30,34 +30,33 @@ def signup(request):
 @api_view(["GET"])
 def loginreq(request, email, password):
     if request.method == "GET":
-        user = Doctor.objects.filter(user_email = email, user_password = password).first()
+        user = Doctor.objects.filter(doctor_email = email, doctor_password = password).first()
         if user in Doctor.objects.all():
             return JsonResponse({"status": "success", "email": email, "password": password })
         else:
             return JsonResponse({"status": "failed"})
 
 
-@api_view(["PUT", "DELETE"])
-def modify(request, email, password):
-    user = Doctor.objects.get(user_email = email, user_password = password)
+@api_view(["PUT"])
+def modify_availability(request, email, password):
+    doctor = Doctor.objects.get(doctor_email = email, doctor_password = password)
+    doctor.morning_available = request.data.get('morning_available', doctor.morning_available)
+    doctor.evening_available = request.data.get('evening_available', doctor.evening_available)
+    doctor.save()
+    serializer =  DoctorSerializer(doctor, many = False)
+    return Response(serializer.data)
 
-    if request.method == "PUT":
-        user.user_name = request.data.get('user_name', user.user_name)
-        user.specification = request.data.get('specification', user.specification)
-        user.user_email = request.data.get('user_email', user.user_email)
-        user.user_password = request.data.get('user_password', user.user_password)
-        user.save()
-        serializer =  DoctorSerializer(user, many = False)
-        return Response(serializer.data)
-
-    if request.method == "DELETE":
-        user.delete()
-        return Response({"status":"success"})
 
 @api_view(["GET"])
 def profile(request, email, password):
-    user = Doctor.objects.get(user_email = email, user_password = password)
+    user = Doctor.objects.get(doctor_email = email, doctor_password = password)
     serilizer = DoctorSerializer(user, many=False)
+    return Response(serilizer.data)
+
+@api_view(["GET"])
+def other_profile(request, email, password):
+    user = OtherUser.objects.get(user_email = email, user_password = password)
+    serilizer = OtherUserSerializer(user, many=False)
     return Response(serilizer.data)
 
 
@@ -72,6 +71,6 @@ def otheruser_login(request, email, password):
     if request.method == "GET":
         otheruser = OtherUser.objects.filter(user_email = email, user_password = password).first()
         if otheruser in OtherUser.objects.all():
-            return JsonResponse({"status": "success", "email": email, "password": password })
+            return JsonResponse({"status": "success", "email": email, "password": password, 'specification': otheruser.specification })
         else:
             return JsonResponse({"status": "failed"})
