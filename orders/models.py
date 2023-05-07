@@ -14,7 +14,7 @@ class Order(models.Model):
     order_id = models.AutoField(primary_key=True)    
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     medicine_name = models.CharField(max_length=50, default='')    
-    date_created = models.DateTimeField(default=timezone.now)
+    date_created = models.DateField(default=timezone.now)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
     quantity = models.IntegerField(default=0)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
