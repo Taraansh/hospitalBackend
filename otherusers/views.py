@@ -7,26 +7,6 @@ from django.db.models import Q
 
 
 # Create your views here.
-@api_view(["GET", "POST"])
-def signup(request):
-    # Remove this get method after completing signup process
-    if request.method == "GET":
-        user = Doctor.objects.all()
-        serializer = DoctorSerializer(user, many=True)
-        return Response(serializer.data)
-
-    if request.method == "POST":
-        user = Doctor.objects.create(
-            user_name = request.data['user_name'],
-            specification = request.data['specification'],
-            user_email = request.data['user_email'],
-            user_password = request.data['user_password'],
-        )
-        serializer = DoctorSerializer(user, many=False)
-        serializer.save()
-        return Response(serializer.data)
-    
-
 @api_view(["GET"])
 def loginreq(request, email, password):
     if request.method == "GET":

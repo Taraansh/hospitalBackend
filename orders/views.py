@@ -24,24 +24,6 @@ def create_order(request, patient_email):
     return Response({"status": "success"})
 
 
-
-@api_view(['GET'])
-def view_order(request, order_id):
-    order = Order.objects.get(order_id=order_id)
-    serializer = OrderSerializer(order)
-    return Response(serializer.data)
-
-
-@api_view(['PUT'])
-def update_order(request, order_id):
-    order = Order.objects.get(order_id=order_id)
-    serializer = OrderSerializer(order, data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors)
-
-
 @api_view(['DELETE'])
 def delete_order(request, order_id):
     order = Order.objects.get(order_id=order_id)
