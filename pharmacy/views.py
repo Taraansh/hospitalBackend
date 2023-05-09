@@ -21,6 +21,7 @@ def medicine_list(request):
             price = request.data['price'],
         )
         serializer = MedicineSerializer(medicine, many = False)
+        medicine.save()
         return Response(serializer.data)
 
 
