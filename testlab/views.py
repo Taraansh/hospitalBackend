@@ -1,15 +1,26 @@
+from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status
 from patients.models import Patient
 from testlab.models import Test, PathLabTestBooking
 from testlab.serializers import TestSerializer, PathLabTestBookingSerializer
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def test_list(request):
-    tests = Test.objects.all()
-    serializer = TestSerializer(tests, many=True)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        tests = Test.objects.all()
+        serializer = TestSerializer(tests, many=True)
+        return Response(serializer.data)
+
+    if request.method == 'POST':
+        test = Test.objects.create(
+            name = request.data['test_name'],
+            description = request.data['description'],
+            price = request.data['price'],
+        )
+        test.save()
+        serializer = TestSerializer(test, many = False)
+        return Response(serializer.data)
 
 
 @api_view(['GET'])
@@ -55,3 +66,23 @@ def book_test(request, patient_email):
     booktest.save()
     serializer = PathLabTestBookingSerializer(booktest, many=False)
     return Response({"status": "success"})
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def test_detail(request, test_id):
+    test = Test.objects.get(id=test_id)
+
+    if request.method == 'GET':
+        serializer = TestSerializer(test)
+        return Response(serializer.data)
+
+    if request.method == 'PUT':
+        serializer = TestSerializer(test, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
+    if request.method == 'DELETE':
+        test.delete()
+        return JsonResponse({"status":"success"})
