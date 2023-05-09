@@ -7,5 +7,5 @@ urlpatterns = [
     path('mytests/<str:patient_email>/', views.view_tests_booked_by_patient, name='view_tests_booked_by_patient'),
     path('uploadtestresults/<int:test_id>/', views.upload_test_results, name='upload_test_results'),
     path('test/<str:patient_email>/', views.book_test, name="book_test"),
-
+    path('detail/<int:test_id>/', views.test_detail, name='test_detail'),
 ]
