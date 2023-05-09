@@ -22,9 +22,10 @@ def check_quantity(sender, instance, **kwargs):
     and if the quantity is less than or equal to 10, it updates the availability
     field to False.
     """
-    if instance.quantity <= 10 and instance.available:
+    quantity = int(instance.quantity)
+    if quantity <= 10 and instance.available:
         instance.available = False
         instance.save(update_fields=['available'])
-    elif instance.quantity > 10 and not instance.available:
+    elif quantity > 10 and not instance.available:
         instance.available = True
         instance.save(update_fields=['available'])
