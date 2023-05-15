@@ -27,4 +27,4 @@ urlpatterns = [
     path('appointment/', include('appointment.urls')),
 ]
 
-urlpatterns += staticfiles_urlpatterns
+urlpatterns += staticfiles_urlpatterns()
