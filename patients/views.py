@@ -14,12 +14,16 @@ def signup(request):
         serializer = PatientSerializer(patient, many=True)
         return Response(serializer.data)
 
+    email = request.data['patient_email']
+    
+    if Patient.objects.filter(patient_email=email).exists():
+        return JsonResponse({'message': 'Email already exists'})
+    
     dob = request.data['patient_dob']
     dob_parts = dob.split('-')
     dob_date = date(int(dob_parts[0]), int(dob_parts[1]), int(dob_parts[2]))
     today = date.today()
     age = today.year - dob_date.year - ((today.month, today.day) < (dob_date.month, dob_date.day))
-    print(dob)
 
     if request.method == "POST":
         patient = Patient.objects.create(
